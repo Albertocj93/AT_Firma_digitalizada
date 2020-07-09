@@ -1,0 +1,152 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<body>
+    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>Registro de usuarios</h4>
+                    </div>
+                </div>
+            </div>
+            <div class="widget-content widget-area-form">
+                <form method="post" class="row mb-4">
+                    <div class="col-xl-6 col-md-12 col-sm-12 col-12">
+                        <div class="form-group col-xl-12">
+                            <label>Nombres</label>
+                            <input type="text" class="form-control" id="txtNombresApellidos" name="txtNombresApellidos" required />
+                        </div>
+                        <div class="form-group col-xl-12">
+                            <label>Apellidos</label>
+                            <input type="text" class="form-control" id="txtApellidos" name="txtApellidos" required />
+                        </div>
+                        <div class="form-group col-xl-6 col-md-12">
+                            <label>Gerencia</label>
+                            <select class="form-control form-control-sm" id="cboGerencia" name="cboGerencia" asp-items="@(new SelectList(string.Empty, "Value", "Text"))" required>
+                            </select>
+                        </div>
+                        <div class="form-group col-xl-6 col-md-12">
+                            <label>Puesto de trabajo</label>
+                            <input type="text" class="form-control" id="txtPuestoTrabajo" name="txtPuestoTrabajo" required />
+                        </div>
+                        <div class="form-group col-xl-12 col-md-12 row">
+                            <div class="col-xl-6 col-md-12">
+                                <label>Usuario</label>
+                                <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" />
+                            </div>
+                            <div class="col-xl-6 col-md-12">
+                                <label>&nbsp;</label>
+                                <br />
+                                @*<a href="#">Resetear contraseña</a>*@
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12 col-md-12 row">
+                            <div class="col-xl-6 col-md-12">
+                                <label>Perfil</label>
+                                <select class="form-control form-control-sm" id="cboPerfil" name="cboPerfil" asp-items="@(new SelectList(string.Empty, "Value", "Text"))">
+                                </select>
+                            </div>
+                            <div class="col-xl-6 col-md-12">
+                                <label>&nbsp;</label>
+                                <br />
+                                <a class="btn btn-outline-primary mb-2" id="btnPerfil">Agregar</a>
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12 col-md-12">
+                            <div class="table-responsive">
+                                <table class="table table-bordered mb-4" id="tbPerfil" name="tbPerfil">
+                                    <thead>
+                                        <tr>
+                                            <th class="perfilId" id="perfilId">0</th>
+                                            <th id="perfilDesc">Descripción</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @*<tr>
+                            <td class="rolId" id="rolId">11</td>
+                            <td id="rolDesc">Shaun Park</td>
+                            <td>Eliminar</td>
+                        </tr>*@
+                                    </tbody>
+                                </table>
+                                <div id="detPerfil"></div>
+                            </div>
+                        </div>
+                        <div class="form-group col-xl-12 col-md-12 row">
+                            <div class="col-xl-6 col-md-12">
+                                @*<input class="form-control" type="text" id="disabledTextInput" value="" readonly />*@
+                                <input type="text" style="opacity:0;" id="countRows" name="countRows" value="" />
+                            </div>
+                            @*<div class="col-xl-6 col-md-12">
+                <br />
+                <p style="color: red; font-size: 13px;">*Agregar por lo menos un perfil</p>
+            </div>*@
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-md-12">
+                        <div class="form-group col-xl-6 col-md-12">
+                            <label>Estado</label>
+                            <select class="form-control form-control-sm" id="cboEstado" name="cboEstado" required>
+                                <option value="">Seleccione</option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-xl-6 col-md-12">
+                            <label>DNI</label>
+                            <input type="number" class="form-control" id="txtDni" name="txtDni" required
+                                   oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                   maxlength="8" />
+                        </div>
+                        <div class="form-group col-xl-6 col-md-12">
+                            <label>Email</label>
+                            <input type="email" class="form-control" id="txtEmail" name="txtEmail" required />
+                        </div>
+                        <div class="form-group col-xl-6 col-md-12">
+                            <label>Licencia</label>
+                            <input type="text" class="form-control" id="txtLicencia" name="txtLicencia" required />
+                        </div>
+                    </div>
+                    <div class="col-xl-6 ">
+                        <div class="col-lg-6">
+                            <input class="btn btn-primary mb-2" type="submit" value="Grabar" />
+                            <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="Usuario" asp-action="Index">Salir</a>
+                        </div>
+                        <div class="col-lg-6">
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $.getJSON("/Usuario/GetGerencia", function (data) {
+                var row = "";
+                $("#cboGerencia").empty();
+                row = "<option value=''>" + "Seleccionar" + "</option>";
+                $.each(data, function (index, id) {
+                    row += "<option value='" + id.value + "'>" + id.text + "</option>";
+                });
+                $("#cboGerencia").html(row);
+            });
+            $.getJSON("/Usuario/GetPerfil", function (data) {
+                var row = "";
+                $("#cboPerfil").empty();
+                row = "<option value=''>" + "Seleccionar" + "</option>";
+                $.each(data, function (index, id) {
+                    row += "<option value='" + id.value + "'>" + id.text + "</option>";
+                });
+                $("#cboPerfil").html(row);
+            });
+        })
+    </script>
+}

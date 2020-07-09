@@ -1,0 +1,233 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<body>
+    <div class="col-xl-12 col-lg-12 col-sm-12 layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>Editar usuario</h4>
+                    </div>
+                </div>
+            </div>
+            @foreach (System.Data.DataRow dr in ViewBag.emp.Rows)
+            {
+                var activo = @dr["Activo"].ToString();
+                <div class="widget-content widget-area-form">
+                    <form method="post" class="row mb-4" id="myform" onsubmit="return enviar();">
+                        <div class="col-xl-6 col-md-12 col-sm-12 col-12">
+                            <div class="form-group col-xl-12">
+                                <label>Nombres y apellidos</label>
+                                <input type="text" class="form-control" id="txtNombresApellidos" name="txtNombresApellidos" value="@dr["NombresCompletos"]" required />
+                            </div>
+                            <div class="form-group col-xl-12">
+                                <label>Apellidos</label>
+                                <input type="text" class="form-control" id="txtApellidos" name="txtApellidos"  value="@dr["apellidos"]" required />
+                            </div>
+                            <div class="form-group col-xl-6 col-md-12">
+                                <label>Gerencia</label>
+                                <select class="form-control form-control-sm" id="cboGerencia" name="cboGerencia" asp-items="@(new SelectList(string.Empty, "Value", "Text"))" required>
+                                </select>
+                            </div>
+                            <div class="form-group col-xl-6 col-md-12">
+                                <label>Puesto de trabajo</label>
+                                <input type="text" class="form-control" id="txtPuestoTrabajo" name="txtPuestoTrabajo" value="@dr["puestoTrabajo"]" required />
+                            </div>
+                            <div class="form-group col-xl-12 col-md-12 row">
+                                <div class="col-xl-6 col-md-12">
+                                    <label>Usuario</label>
+                                    <input type="text" class="form-control" id="txtUsuario" name="txtUsuario" value="@dr["Usr"]" />
+                                </div>
+                                <div class="col-xl-6 col-md-12">
+                                    <label>&nbsp;</label><br />
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="chkCambioContrasena" name="chkCambioContrasena" />
+                                        <label class="custom-control-label" for="chkCambioContrasena">Resetear contraseña</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xl-12 col-md-12 row">
+                                <div class="col-xl-6 col-md-12">
+                                    <label>Perfil</label>
+                                    <select class="form-control form-control-sm" id="cboPerfil" name="cboPerfil" asp-items="@(new SelectList(string.Empty, "Value", "Text"))">
+                                    </select>
+                                </div>
+                                <div class="col-xl-6 col-md-12">
+                                    <label>&nbsp;</label>
+                                    <br />
+                                    <a class="btn btn-outline-primary mb-2" id="btnPerfil">Agregar</a>
+                                </div>
+                            </div>
+                            <div class="form-group col-xl-12 col-md-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered mb-4" id="tbPerfil" name="tbPerfil">
+                                        <thead>
+                                            <tr>
+                                                <th class="perfilId" id="perfilId">0</th>
+                                                <th id="perfilDesc">Descripción</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyPerfil">
+                                        </tbody>
+                                    </table>
+                                    <div id="detPerfil"></div>
+                                </div>
+                            </div>
+                            <div class="form-group col-xl-12 col-md-12 row">
+                                <div class="col-xl-6 col-md-12">
+                                    @*<input class="form-control" type="text" id="disabledTextInput" value="" readonly />*@
+                                    <input type="text" style="opacity:0;" id="countRows" name="countRows" value="" required />
+                                    <input type="text" style="opacity:0;" id="chkPss" name="chkPss" value="" />
+                                </div>
+                                @*<div class="col-xl-6 col-md-12">
+                <br />
+                <p style="color: red; font-size: 13px;">*Agregar por lo menos un perfil</p>
+            </div>*@
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-md-12">
+                            <div class="form-group col-xl-6 col-md-12">
+                                <label>Estado</label>
+                                <select class="form-control form-control-sm" id="cboEstado" name="cboEstado" required>
+                                    <option value="">Seleccione</option>
+                                    @if (activo == "True")
+                                    {
+                                        <option value="1" selected>Activo</option>
+                                        <option value="0">Inactivo</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="1">Activo</option>
+                                        <option value="0" selected>Inactivo</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group col-xl-6 col-md-12">
+                                <label>DNI</label>
+                                <input type="number" class="form-control" id="txtDni" name="txtDni" value="@dr["dni"]" required
+                                       oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+                                       maxlength="8" />
+                            </div>
+                            <div class="form-group col-xl-6 col-md-12">
+                                <label>Email</label>
+                                <input type="email" class="form-control" id="txtEmail" name="txtEmail" value="@dr["Email"]" required />
+                            </div>
+                            <div class="form-group col-xl-6 col-md-12">
+                                <label>Licencia</label>
+                                <input type="text" class="form-control" id="txtLicencia" name="txtLicencia" value="@dr["Licencia"]" required />
+                            </div>
+                            <div class="form-group col-xl-6 col-md-12">
+                                <input type="text" style="opacity:0;" id="id" name="id" value="@dr["Id"]" required />
+                            </div>
+                        </div>
+                        <div class="col-xl-6 ">
+                            <div class="col-lg-6">
+                                <input class="btn btn-primary mb-2" type="submit" id="submit" value="Grabar" />
+                                <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="Usuario" asp-action="Index">Salir</a>
+                            </div>
+                            <div class="col-lg-6">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+@section Scripts
+{
+    @foreach (System.Data.DataRow dr in ViewBag.emp.Rows)
+    {
+<script>
+    $(document).ready(function () {
+        var usuario = $("#txtUsuario").val();
+        if (usuario == "") {
+            document.getElementById("chkCambioContrasena").setAttribute("disabled", true);
+            document.getElementById("chkPss").value = "on";
+        } else
+            document.getElementById("txtUsuario").setAttribute("required", true);
+        $.getJSON("/Usuario/GetGerencia", function (data) {
+            var row = "";
+            $("#cboGerencia").empty();
+            row = "<option value=''>" + "Seleccionar" + "</option>";
+            $.each(data, function (index, id) {
+                if (@dr["id_gerencia"] != 0) {
+                    if (@dr["id_gerencia"] == id.value)
+                        row += "<option value='" + id.value + "' selected>" + id.text + "</option>";
+                    else
+                        row += "<option value='" + id.value + "'>" + id.text + "</option>";
+                } else
+                    row += "<option value='" + id.value + "'>" + id.text + "</option>";
+            });
+            $("#cboGerencia").html(row);
+        });
+        $.getJSON("/Usuario/GetPerfil", function (data) {
+            var row = "";
+            $("#cboPerfil").empty();
+            row = "<option value=''>" + "Seleccionar" + "</option>";
+            $.each(data, function (index, id) {
+                row += "<option value='" + id.value + "'>" + id.text + "</option>";
+            });
+            $("#cboPerfil").html(row);
+        });
+        $.getJSON("/Usuario/GetUsuarioPerfilIdUsu", { id_usuario: @dr["id_usuario"] }, function (data) {
+            var row = "";
+            $("#tbodyPerfil").empty();
+            var countNum = 0;
+            $.each(data, function (index, id) {
+                row += "<tr>";
+                row += "<td class='perfilId' id='perfilId' style='display: none;'>" + id.value + "</td ><td id='perfilDesc'>" + id.text + "</td>";
+                row += "<td><a id='aPerfil" + id.value + "' href=" + '' + "javascript:eliminarFila('tbPerfil'," + (index + 1) + ",'perfil')" + '' + ">";
+                row += "<svg width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' class='feather feather-x-circle table-cancel'><circle cx='12' cy='12' r='10'></circle><line x1='15' y1='9' x2='9' y2='15'></line><line x1='9' y1='9' x2='15' y2='15'></line></svg>";
+                row += "</a></td></tr>";
+                row += "</tr>";
+            });
+            $("#tbodyPerfil").html(row);
+            var row = "";
+            $("#detPerfil").empty();
+            $.each(data, function (index, id) {
+                countNum = countNum + 1;
+                row += "<input type='hidden' id='perfil" + (index + 1) + "' name='perfil" + (index + 1) + "' value='" + id.value + "' />";
+            });
+            $("#detPerfil").html(row);
+            document.getElementById("countRows").value = countNum;
+            //document.getElementById("disabledTextInput").value = countNum;
+        });
+    });
+
+    const checkbox = document.getElementById('chkCambioContrasena')
+    checkbox.addEventListener('change', (event) => {
+        if (event.target.checked) {
+            document.getElementById("chkPss").value = "on";
+        } else {
+            document.getElementById("chkPss").value = "";
+        }
+    })
+
+    function enviar() {
+        var formulario = document.getElementById("myform");
+        if ($("#txtUsuario").val() == "") {
+            formulario.submit();
+        } else {
+            if ($("#countRows").val() == 0) {
+                alert("Al ingresar un usuario, debe registrar al menos un perfil")
+                return false;
+            } else
+                formulario.submit();
+        }
+        //if (dato.value == "enviar") {
+        //    alert("Enviando el formulario");
+        //    //formulario.submit();
+        //    return false;
+        //} else {
+        //    alert("No se envía el formulario");
+        //    return false;
+        //}
+    }
+</script>
+    }
+}

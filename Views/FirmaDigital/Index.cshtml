@@ -1,0 +1,68 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<body>
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>Lista de firmas</h4>
+                    </div>
+                </div>
+            </div>
+            @using (Html.BeginForm("Index", "FirmaDigital", FormMethod.Post))
+            {
+                <div class="row mb-4">
+                    <div class="col-xl-4">
+                        <label>Nombres y Apellidos</label>
+                        <input type="text" class="form-control form-control-sm" id="txtNombresApellidos" name="txtNombresApellidos" required />
+                    </div>
+                    <div class="col-xl-3">
+                        <label>Gerencia</label>
+                        <select class="form-control form-control-sm" id="cboGerencia" name="cboGerencia" asp-items="@(new SelectList(string.Empty, "Value", "Text"))" required>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4">
+                        <input class="btn btn-primary mb-2" type="submit" id="btnfiltraUsuario" value="Buscar" />
+                        <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="FirmaDigital" asp-action="Index">Cargar todo</a>
+                        <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="FirmaDigital" asp-action="AddFirmaDigital">Registrar</a>
+                    </div>
+                </div>
+            }
+            <div class="table-responsive mb-4">
+                <table id="tbFirmasDigitales" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="thTable25">Nombres y apellidos</th>
+                            <th class="thTable25">Gerencia</th>
+                            <th class="text-center">Código</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $.getJSON("/Usuario/GetGerencia", function (data) {
+                var row = "";
+                $("#cboGerencia").empty();
+                row = "<option value=''>" + "Seleccionar" + "</option>";
+                $.each(data, function (index, id) {
+                    row += "<option value='" + id.value + "'>" + id.text + "</option>";
+                });
+                $("#cboGerencia").html(row);
+            });
+        })
+    </script>
+}

@@ -1,0 +1,138 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+*@
+@{
+}
+<body>
+    @*<h1>Usuarios</h1>
+        <h3>Lista </h3>*@
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>Lista de usuarios</h4>
+                    </div>
+                </div>
+            </div>
+            @using (Html.BeginForm("Index", "Usuario", FormMethod.Post))
+            {
+                <div class="row mb-4">
+                    <div class="col-xl-4">
+                        <label>Nombres y Apellidos</label>
+                        <input type="text" class="form-control form-control-sm" id="txtNombresApellidos" name="txtNombresApellidos" required />
+                    </div>
+                    <div class="col-xl-3">
+                        <label>Gerencia</label>
+                        <select class="form-control form-control-sm" id="cboGerencia" name="cboGerencia" asp-items="@(new SelectList(string.Empty, "Value", "Text"))" required>
+                        </select>
+                    </div>
+                    <div class="col-xl-3">
+                        <label>Estado</label>
+                        <select class="form-control form-control-sm" id="cboEstado" name="cboEstado" required>
+                            <option value="">Seleccione</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-4">
+                        <input class="btn btn-primary mb-2" type="submit" id="btnfiltraUsuario" value="Buscar" />
+                        <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="Usuario" asp-action="Index">Cargar todo</a>
+                        <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="Usuario" asp-action="AddUsuario">Registrar</a>
+                    </div>
+                </div>
+            }
+            <div class="table-responsive mb-4">
+                <table id="tbUsuarios" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Id</th>
+                            <th class="thTable25">Nombres y apellidos</th>
+                            <th>DNI</th>
+                            <th>Usuario</th>
+                            <th class="thTable25">Email</th>
+                            <th class="text-center">Estado</th>
+                            <th>Puesto</th>
+                            <th>Licencia</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (System.Data.DataRow dr in ViewBag.emp.Rows)
+                        {
+                            <tr>
+                                <td>@dr["id"]</td>
+                                <td>@dr["NombresCompletos"]</td>
+                                <td>@dr["dni"]</td>
+                                <td>@dr["usuario"]</td>
+                                <td>@dr["Email"]</td>
+                                <td>@dr["activo"]</td>
+                                <td>@dr["puestoTrabajo"]</td>
+                                <td>@dr["licencia"]</td>
+                                <td class="text-center">
+                                    <a href="/Usuario/UpdUsuario?id=@dr["id"]"><i class="far fa-edit"></i></a>
+                                    <a href="javascript:cambiarEstadoPersonal(@dr["id"], 0, '@dr["activo"]', false) "><i class="far fa-trash-alt"></i></a>
+                                    @*<a href="#" onclick="deleteUser(`@dr["codigoUsuario"]`);">Delete</a>*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    @{
+        if (TempData["msg"] != null)
+        {
+            <script>alert(`Registro de usuario @TempData["msg"]`)</script>
+        }
+    }
+</body>
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $.getJSON("/Usuario/GetGerencia", function (data) {
+                var row = "";
+                $("#cboGerencia").empty();
+                row = "<option value=''>" + "Seleccionar" + "</option>";
+                $.each(data, function (index, id) {
+                    row += "<option value='" + id.value + "'>" + id.text + "</option>";
+                });
+                $("#cboGerencia").html(row);
+            });
+        })
+
+        function cambiarEstadoPersonal(id, estado, estActual, tipoEstado) {
+            if (tipoEstado == false) {
+                if (estActual == "No") {
+                    alert('El Personal ya se encuentra inactivo');
+                    return;
+                }
+                else {
+                    const r = confirm('¿Desea incativar personal? id: ' + id);
+                    if (r === true)
+                        location.href = "/Usuario/UpdEstadoPersonal?id=" + id + "& estado=" + estado;
+                    else
+                        return;
+                }
+            }
+            if (tipoEstado == true) {
+                if (estActual == "Si") {
+                    alert('El Personal ya se encuentra activo');
+                    return;
+                }
+                else {
+                    const r = confirm('¿Desea activar personal? id: ' + id);
+                    if (r === true)
+                        location.href = "/Usuario/UpdEstadoPersonal?id=" + id + "& estado=" + estado;
+                    else
+                        return;
+                }
+            }
+        }
+    </script>
+}
