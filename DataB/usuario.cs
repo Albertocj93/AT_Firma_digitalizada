@@ -8,6 +8,9 @@ using System.Data;
 using System.Configuration;
 using webApiATSA.Models;
 using System.Transactions;
+using System.Net.Mail;
+using System.Text;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace webApiATSA.DataB
 {
@@ -79,7 +82,7 @@ namespace webApiATSA.DataB
             SqlTransaction transaction = null;
             String valorReturn = "";
             String idUsuario = "";
-            String idPerfil = "";
+            String Psw = "";
             using (SqlConnection cn = new SqlConnection(conecction)) { 
                 try
                     {
@@ -109,8 +112,23 @@ namespace webApiATSA.DataB
                         foreach (var item in lstIdPerfil)
                         {
                             modelUP.id_perfil = item;
-                            idPerfil = setUsuarioPerfilIns(modelUP, cn, transaction);
+                            Psw = setUsuarioPerfilIns(modelUP, cn, transaction, "1");
                         }
+                        //Envío correo
+                        List<string> toE = new List<string>() {
+                            modelo.Email
+                            //"acarranzaj@atsaperu.com"
+                        };
+                        List<string> ccE = new List<string>() {""};
+                        List<string> ccoE = new List<string>() {""};
+                        string asunto = "Registro de credenciales Portal - ATSA";
+                        string cuerpo = "";
+                        cuerpo += "Estimado usuario: </br></br>";
+                        cuerpo += "Se registró sus datos en el portal ATSA, de igual manera sus credenciales de acceso al mismo:</br>";
+                        cuerpo += "Usuario: "+ modelU.Usr + "</br>";
+                        cuerpo += "Contraseña: "+ Psw + "</br></br>";
+                        cuerpo += "Se recomienda modificar su contraseña en el portal.</br></br>Saludos cordiales.";
+                        Boolean emailSend =  MailSenderOffice365(toE, ccE, ccoE, asunto, cuerpo);
                     }
 
                     transaction.Commit();
@@ -183,7 +201,7 @@ namespace webApiATSA.DataB
                 //cn.Close();
             }
         }
-        public String setUsuarioPerfilIns(UsuarioPerfilModel modelo, SqlConnection cn, SqlTransaction transaction)
+        public String setUsuarioPerfilIns(UsuarioPerfilModel modelo, SqlConnection cn, SqlTransaction transaction, String i)
         {
             try
             {
@@ -192,6 +210,7 @@ namespace webApiATSA.DataB
                 com.CommandType = CommandType.StoredProcedure;
                 com.Parameters.AddWithValue("@id_usuario", modelo.id_usuario);
                 com.Parameters.AddWithValue("@id_perfil", modelo.id_perfil);
+                com.Parameters.AddWithValue("@i", i);
                 String n = (String)com.ExecuteScalar();
                 return n;
             }
@@ -207,7 +226,7 @@ namespace webApiATSA.DataB
             SqlTransaction transaction = null;
             String valorReturn = "";
             String idUsuario = "";
-            String idPerfil = "";
+            String Psw = "";
             using (SqlConnection cn = new SqlConnection(conecction))
             {
                 try
@@ -234,7 +253,7 @@ namespace webApiATSA.DataB
                     modelU.id_personal = Convert.ToInt32(modelo.id);
                     if (modelU.Usr != "")
                     { //Solo si se ingresa a usuario deberá registrar usuario, perfiles y enviar correo.
-                        if(chk == "on") 
+                        if(chk == "on") //Si modifica contraseña
                             idUsuario = setUsuarioIns(modelU, cn, transaction);
                         else
                             idUsuario = setUsuarioUp(modelU, cn, transaction);
@@ -244,7 +263,24 @@ namespace webApiATSA.DataB
                         foreach (var item in lstIdPerfil)
                         {
                             modelUP.id_perfil = item;
-                            idPerfil = setUsuarioPerfilIns(modelUP, cn, transaction);
+                            Psw = setUsuarioPerfilIns(modelUP, cn, transaction, "1");
+                        }
+
+                        if (chk == "on")//Si modifica contraseña
+                        {
+                            List<string> toE = new List<string>() {
+                                   modelo.Email
+                            };
+                            List<string> ccE = new List<string>() { "" };
+                            List<string> ccoE = new List<string>() { "" };
+                            string asunto = "Actualización de credenciales Portal - ATSA";
+                            string cuerpo = "";
+                            cuerpo += "Estimado usuario: </br></br>";
+                            cuerpo += "Se actualizó sus datos en el portal ATSA, de igual manera sus credenciales de acceso al mismo:</br>";
+                            cuerpo += "Usuario: " + modelU.Usr + "</br>";
+                            cuerpo += "Contraseña: " + Psw + "</br></br>";
+                            cuerpo += "Se recomienda modificar su contraseña en el portal.</br></br>Saludos cordiales.";
+                            Boolean email =  MailSenderOffice365(toE, ccE, ccoE, asunto, cuerpo);
                         }
                     }
 
@@ -343,7 +379,96 @@ namespace webApiATSA.DataB
 
             return dsg;
         }
+        public DataSet getpersonalUsuarioAll()
+        {
+            SqlConnection cn = new SqlConnection(conecction);
 
+            cn.Open();
+
+            SqlCommand com = new SqlCommand("SP_personalUsuario_getAll", cn);
+            com.CommandType = CommandType.StoredProcedure;
+
+            SqlDataAdapter da = new SqlDataAdapter(com);
+            DataSet dsg = new DataSet();
+            da.Fill(dsg);
+
+            cn.Close();
+
+            return dsg;
+        }
+
+        private static string Host = "smtp.office365.com";
+        private static int Port = Convert.ToInt32("587");
+        private static string mailInterno = "";
+        private static string mailUser = "reportessig@atsaperu.com";
+        private static string mailPassword = "Seguridad2019";
+        public bool MailSenderOffice365(List<string> to, List<string> CC, List<string> Cco, string Asunto, string Cuerpo)
+        {
+
+            bool resp = false;
+            try
+            {
+                //envio correo
+                SmtpClient client = new SmtpClient(Host, Port);
+                client.EnableSsl = true;
+                client.Credentials = new System.Net.NetworkCredential(mailUser, mailPassword);
+                MailAddress from = new MailAddress(mailUser, String.Empty, System.Text.Encoding.UTF8);
+
+                //MailAddress to = new MailAddress(e_to);
+                MailMessage message = new MailMessage();//e_from,e_to
+
+                message.From = from;
+
+                if (!string.IsNullOrEmpty(mailInterno))
+                {
+                    message.To.Add(new MailAddress(mailInterno));
+                }
+                else
+                {
+                    foreach (var x in to)
+                    {
+                        if (!String.IsNullOrEmpty(x))
+                        {
+                            message.To.Add(x);
+                        }
+                    }
+
+                    foreach (string oCC in CC)
+                    {
+                        if (!String.IsNullOrEmpty(oCC))
+                        {
+                            message.CC.Add(oCC);
+                        }
+                    }
+
+                    // Cco
+                    foreach (string oCco in Cco)
+                    {
+                        if (!String.IsNullOrEmpty(oCco))
+                        {
+                            message.Bcc.Add(new MailAddress(oCco));
+                        }
+                    }
+                }
+
+                message.IsBodyHtml = true;
+                message.Body = Cuerpo;
+                message.BodyEncoding = System.Text.Encoding.UTF8;
+
+                message.Subject = Asunto;
+                message.SubjectEncoding = System.Text.Encoding.UTF8;
+                client.Send(message);
+
+                resp = true;
+                return resp;
+            }
+            catch (SmtpException ex)
+            {
+                throw new Exception("MailSender : " +  ex); // InsertLog.Instanse.Insert("MailSender : " + ex);
+                //return false;
+            }
+
+        }
         //API
         public async Task<List<UsuarioModel>> GetAll()
         {

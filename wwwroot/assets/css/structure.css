@@ -205,10 +205,8 @@ code {
     padding: 4px 0; }
 
 .navbar {
-    padding: 0;
-    background: #00548A;
-    /*background: #0e1726;*/
-}
+  padding: 0;
+  background: #0e1726; }
   .navbar .theme-brand {
     padding: 0.9px 0 0.9px 27px !important;
     border-radius: 6px 6px 0 0;
@@ -857,12 +855,10 @@ code {
   border-radius: 50%; }
 
 #sidebar ul.menu-categories ul.submenu > li.active a {
-    /*color: #1b55e2;*/
-    color: #00548A;
-    border-top-left-radius: 10px;
-    border-bottom-left-radius: 10px;
-    font-weight: 600;
-}
+  color: #1b55e2;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  font-weight: 600; }
 
 #sidebar ul.menu-categories li.menu ul.submenu > li.active a:before {
   background-color: #1b55e2; }

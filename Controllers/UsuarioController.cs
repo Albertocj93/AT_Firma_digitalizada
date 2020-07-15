@@ -35,6 +35,7 @@ namespace webApiATSA.Controllers
         //GET: Index
         public ActionResult Index()
         {
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
             dblayer.config = configuration; //Envía paramétro de Iconfiguration
             DataSet ds = dblayer.getAll();
             ViewBag.emp = ds.Tables[0];
@@ -51,6 +52,7 @@ namespace webApiATSA.Controllers
         [HttpPost]
         public ActionResult Index(IFormCollection fc)
         {
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
             dblayer.config = configuration; //Envía paramétro de Iconfiguration
             PersonalModel us = new PersonalModel();
             us.NombresCompletos = fc["txtNombresApellidos"];
@@ -74,6 +76,7 @@ namespace webApiATSA.Controllers
         //GET: AddUsuario
         public ActionResult AddUsuario()
         {
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
             TempData["msg"] = null;
             ViewData["Title"] = "Agregar nuevo usuario";
             ViewData["Nav"] = "11";
@@ -85,6 +88,7 @@ namespace webApiATSA.Controllers
         [HttpPost]
         public ActionResult AddUsuario(IFormCollection fc, String countRows)
         {
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
             dblayer.config = configuration; //Envía paramétro de Iconfiguration
             try
             {
@@ -165,10 +169,23 @@ namespace webApiATSA.Controllers
             //ViewBag.gerencia = ds.Tables[0];
             return Json(list);
         }
+        public JsonResult GetPersonalUsuario()
+        {
+            dblayer.config = configuration;
+            DataSet ds = dblayer.getpersonalUsuarioAll();
+            List<SelectListItem> list = new List<SelectListItem>();
+            foreach (DataRow dr in ds.Tables[0].Rows)
+            {
+                list.Add(new SelectListItem { Text = dr["NombresCompletos"].ToString(), Value = dr["id_usuario"].ToString() });
+            }
+
+            return Json(list);
+        }
 
         //GET: UpdUsuario
         public ActionResult UpdUsuario(String id)
         {
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
             dblayer.config = configuration; //Envía paramétro de Iconfiguration
             try
             {
@@ -200,6 +217,7 @@ namespace webApiATSA.Controllers
         [HttpPost]
         public ActionResult UpdUsuario(IFormCollection fc, String countRows)
         {
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
             dblayer.config = configuration; //Envía paramétro de Iconfiguration
             try
             {
@@ -248,6 +266,7 @@ namespace webApiATSA.Controllers
         }
         public ActionResult UpdEstadoPersonal(String id, String estado)
         {
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
             dblayer.config = configuration;
             PersonalModel pe = new PersonalModel();
             pe.id = Convert.ToInt32(id);

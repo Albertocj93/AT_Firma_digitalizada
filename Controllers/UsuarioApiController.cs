@@ -26,15 +26,27 @@ namespace webApiATSA.Controllers
 
         //GET api/UsuarioApi
         [HttpGet]
-        public async Task<List<UsuarioModel>> Get()
+        public IEnumerable<string> Get()
         {
-            dblayer.config = configuration;
-            //return Ok(new string[] { "value1", "value2" });
+            //dblayer.config = configuration;
+            //return Ok({ "value1", "value2" });
 
+            return new string[] { "value1", "value2" };
             //if (true)
             //    return BadRequest("Error!");
 
-            return await dblayer.GetAll();
+            //return await dblayer.GetAll();
         }
+        //public async Task<List<UsuarioModel>> Get()
+        //{
+        //    //dblayer.config = configuration;
+        //    //return Ok({ "value1", "value2" });
+
+        //    return await( new string[] { "value1", "value2" });
+        //    //if (true)
+        //    //    return BadRequest("Error!");
+
+        //    //return await dblayer.GetAll();
+        //}
     }
 }

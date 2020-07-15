@@ -1,0 +1,132 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<body>
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>Historial de firmas</h4>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <form method="post" onsubmit="return enviarfiltro();" id="myform">
+                    <div class="row mb-4">
+                        <div class="col-xl-4">
+                            <label>Nombres y Apellidos</label>
+                            <input type="text" class="form-control form-control-sm" id="txtNombresApellidos" name="txtNombresApellidos" required />
+                        </div>
+                        <div class="col-xl-2">
+                            <label>Gerencia</label>
+                            <select class="form-control form-control-sm" id="cboGerencia" name="cboGerencia" asp-items="@(new SelectList(string.Empty, "Value", "Text"))" required>
+                            </select>
+                        </div>
+                        <div class="col-xl-2">
+                            <label>Código</label>
+                            <input type="text" class="form-control form-control-sm" id="txtCodigo" name="txtCodigo" required />
+                        </div>
+                        <div class="col-xl-2">
+                            <label>fecha desde</label>
+                            <input type="date" class="form-control" id="basicFlatpickr" name="txtFechaDesde" required >
+                        </div>
+                        <div class="col-xl-2">
+                            <label>fecha hasta</label>
+                            <input type="date" class="form-control " id="basicFlatpickr2" name="txtFechaHasta" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-4">
+                            <input class="btn btn-primary mb-2" type="submit" id="btnfiltraHistFirma" value="Buscar" />
+                            <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="FirmaDigital" asp-action="HistorialFirma">Cargar todo</a>
+                        </div>
+                    </div>
+                </form>
+                <div class="table-responsive mb-4">
+                    <table id="tbHistorialFirmas" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th class="thTable25">Nombres y apellidos</th>
+                                <th class="thTable25">Gerencia</th>
+                                <th>Código</th>
+                                <th>Serie</th>
+                                <th>Fecha</th>
+                                <th>Sistema</th>
+                                <th>Documento</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (System.Data.DataRow dr in ViewBag.emp.Rows)
+                            {
+                                <tr>
+                                    <td>@dr["NombresCompletos"]</td>
+                                    <td>@dr["gerencia"]</td>
+                                    <td>@dr["Id_firma"]</td>
+                                    <td>@dr["codigoSerie"]</td>
+                                    <td>@dr["fecha"]</td>
+                                    <td>@dr["sistema"]</td>
+                                    <td>@dr["nombreDocumento"]</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    @{
+        if (TempData["msg"] != null)
+        {
+            <script>alert(`Registro de firma @TempData["msg"]`)</script>
+        }
+    }
+</body>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $.getJSON("/Usuario/GetGerencia", function (data) {
+                var row = "";
+                $("#cboGerencia").empty();
+                row = "<option value=''>" + "Seleccionar" + "</option>";
+                $.each(data, function (index, id) {
+                    row += "<option value='" + id.value + "'>" + id.text + "</option>";
+                });
+                $("#cboGerencia").html(row);
+            });
+
+            var f1 = flatpickr(document.getElementById('basicFlatpickr'), {
+                dateFormat: "d/m/Y",
+            });
+            var f2 = flatpickr(document.getElementById('basicFlatpickr2'), {
+                dateFormat: "d/m/Y",
+            });
+        });
+
+        function enviarfiltro() {
+            var formulario = document.getElementById("myform");
+            if ($("#basicFlatpickr").val() == "" || $("#basicFlatpickr2").val() == "") {
+                alert("debe ingresar rango de fechas");
+                return false;
+            }
+            var spf1 = $("#basicFlatpickr").val();
+            var res1 = spf1.split("/");      
+            var spf2 = $("#basicFlatpickr2").val();
+            var res2 = spf2.split("/");   
+
+            var dia1 = parseInt(res1[0]) + 1;
+            var dia2 = parseInt(res2[0]) + 1;
+
+            var fecha1 = new Date(Date.parse(res1[2] + "-" + res1[1] + "-" + dia1));
+            var fecha2 = new Date(Date.parse(res2[2] + "-" + res2[1] + "-" + dia2));
+            //alert(fecha1);
+            if (fecha1 > fecha2) {
+                alert("Fecha fuera del rango correcto");
+                return false;
+            }
+            formulario.submit();
+        }
+    </script>
+}

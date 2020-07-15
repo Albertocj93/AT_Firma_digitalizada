@@ -6,9 +6,6 @@ var DTcustomsetting = {
         },
         "info": "Showing page _PAGE_ of _PAGES_"
     },
-
-
-
 };
 
 
@@ -29,6 +26,5 @@ var DTcustomsetting = {
 
     languageInfo: {
     	"Showing page _PAGE_ of _PAGES_"
-    }   
-    
+    },    
 };

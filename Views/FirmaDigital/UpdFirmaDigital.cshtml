@@ -1,0 +1,62 @@
+﻿@model FirmaDigitalModel
+@{
+}
+<body>
+    <div class="col-xl-12 col-lg-12 col-sm-12  layout-spacing">
+        <div class="widget-content widget-content-area br-6">
+            <div class="widget-header">
+                <div class="row">
+                    <div class="col-xl-12 col-md-12 col-sm-12 col-12">
+                        <h4>Editar firma</h4>
+                    </div>
+                </div>
+            </div>
+            @foreach (System.Data.DataRow dr in ViewBag.emp.Rows) 
+            { 
+                <div class="widget-content widget-area-form">
+                    <form method="post" enctype="multipart/form-data" class="row mb-4" id="myform" onsubmit="return enviar();">
+                        <div class="col-xl-6 col-md-12 col-sm-12 col-12">
+                            <div class="form-group col-xl-12">
+                                <label>Usuario</label>
+                                <input type="text" class="form-control" id="txtNombreCompletos" name="txtNombreCompletos" value="@dr["NombresCompletos"]" readonly />
+                                <input type="text" style="opacity:0;" id="idFirma" name="idFirma" value="@dr["Id_firma"]" />
+                                <input type="text" style="opacity:0;" id="dni" name="dni" value="@dr["dni"]" />
+                            </div>
+                            <div class="form-group col-xl-12">
+                                <div class="custom-file-container" data-upload-id="firmaImagen">
+                                    <label asp-for="firmaPath">Firma <a href="javascript:void(0)" class="custom-file-container__image-clear" title="Clear Image">x</a></label>
+                                    <label class="custom-file-container__custom-file">
+                                        <input asp-for="firmaPath" class="custom-file-container__custom-file__custom-file-input" id="firmaImg" accept="image/jpeg" required>
+                                        <input type="hidden" name="MAX_FILE_SIZE" value="10485760" />
+                                        <span class="custom-file-container__custom-file__custom-file-control"></span>
+                                    </label>
+                                    <div class="custom-file-container__image-preview"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-md-12 col-sm-12 col-12"></div>
+                        <div class="col-xl-6 ">
+                            <div class="col-lg-6">
+                                <input class="btn btn-primary mb-2" type="submit" value="Grabar" />
+                                <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="FirmaDigital" asp-action="Index">Salir</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var firstUpload = new FileUploadWithPreview('firmaImagen')
+        });
+
+        function enviar() {
+            var formulario = document.getElementById("myform");
+            const usuario = $("#cboUsuario").val();
+            formulario.submit();
+        }
+    </script>
+}

@@ -40,15 +40,34 @@
                         <tr>
                             <th class="thTable25">Nombres y apellidos</th>
                             <th class="thTable25">Gerencia</th>
-                            <th class="text-center">Código</th>
-                            <th>Acciones</th>
+                            <th>Código</th>
+                            <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
-                    <tbody></tbody>
+                    <tbody>
+                        @foreach (System.Data.DataRow dr in ViewBag.emp.Rows)
+                        {
+                            <tr>
+                                <td>@dr["NombresCompletos"]</td>
+                                <td>@dr["gerencia"]</td>
+                                <td>@dr["Id_firma"]</td>
+                                <td class="text-center">
+                                    <a href="/FirmaDigital/UpdFirmaDigital?id=@dr["Id_firma"]"><i class="far fa-edit"></i></a>
+                                    <a href="javascript:cambiarEstadoFirma('@dr["Id_firma"]', '0', '1', false) "><i class="far fa-trash-alt"></i></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
                 </table>
             </div>
         </div>
     </div>
+    @{
+        if (TempData["msg"] != null)
+        {
+            <script>alert(`Registro de firma @TempData["msg"]`)</script>
+        }
+    }
 </body>
 @section Scripts
 {
@@ -64,5 +83,34 @@
                 $("#cboGerencia").html(row);
             });
         })
+
+        function cambiarEstadoFirma(id, estado, estActual, tipoEstado) {
+            if (tipoEstado == false) {
+                if (estActual == "No") {
+                    alert('La firma ya se encuentra inactiva');
+                    return;
+                }
+                else {
+                    const r = confirm('¿Desea incativar firma? id: ' + id);
+                    if (r === true)
+                        location.href = "/FirmaDigital/UpdEstadoFirmaDigital?id=" + id + "&estado=" + estado;
+                    else
+                        return;
+                }
+            }
+            if (tipoEstado == true) {
+                if (estActual == "Si") {
+                    alert('La firma ya se encuentra activa');
+                    return;
+                }
+                else {
+                    const r = confirm('¿Desea activar firma? id: ' + id);
+                    if (r === true)
+                        location.href = "/FirmaDigital/UpdEstadoFirmaDigital?id=" + id + "&estado=" + estado;
+                    else
+                        return;
+                }
+            }
+        }
     </script>
 }
