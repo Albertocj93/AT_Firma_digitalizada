@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-4">
+                    <div class="col-md-12">
                         <input class="btn btn-primary mb-2" type="submit" id="btnfiltraUsuario" value="Buscar" />
                         <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="FirmaDigital" asp-action="Index">Cargar todo</a>
                         <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="FirmaDigital" asp-action="AddFirmaDigital">Registrar</a>
@@ -38,24 +38,26 @@
                 <table id="tbFirmasDigitales" class="table table-hover">
                     <thead>
                         <tr>
+                            <th>Código</th>
                             <th class="thTable25">Nombres y apellidos</th>
                             <th class="thTable25">Gerencia</th>
-                            <th>Código</th>
+                            <th>Estado</th>
                             <th class="text-center">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach (System.Data.DataRow dr in ViewBag.emp.Rows)
                         {
-                            <tr>
-                                <td>@dr["NombresCompletos"]</td>
-                                <td>@dr["gerencia"]</td>
-                                <td>@dr["Id_firma"]</td>
-                                <td class="text-center">
-                                    <a href="/FirmaDigital/UpdFirmaDigital?id=@dr["Id_firma"]"><i class="far fa-edit"></i></a>
-                                    <a href="javascript:cambiarEstadoFirma('@dr["Id_firma"]', '0', '1', false) "><i class="far fa-trash-alt"></i></a>
-                                </td>
-                            </tr>
+                        <tr>
+                            <td>@dr["NombresCompletos"]</td>
+                            <td>@dr["gerencia"]</td>
+                            <td>@dr["Id_firma"]</td>
+                            <td>@dr["estado"]</td>
+                            <td class="text-center">
+                                <a href="/FirmaDigital/UpdFirmaDigital?id=@dr["Id_firma"]"><i class="far fa-edit"></i></a>
+                                <a href="javascript:cambiarEstadoFirma('@dr["Id_firma"]', '0', '1', false) "><i class="far fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>

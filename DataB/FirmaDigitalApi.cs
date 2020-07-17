@@ -19,7 +19,7 @@ namespace webApiATSA.DataB
             get { return config.GetConnectionString("DefaultConnectionString"); }
         }
 
-
+        String rutaImagen = "http://localhost:50148/Images/Firmas/";
         public String setUsuarioLogin(UsuarioModel modelU)
         {
             SqlTransaction transaction = null;
@@ -30,7 +30,7 @@ namespace webApiATSA.DataB
                 {
                     cn.Open();
                     transaction = cn.BeginTransaction();
-                    SqlCommand com = new SqlCommand("SP_usuario_getLogin", cn, transaction);
+                    SqlCommand com = new SqlCommand("SP_usuario_getLoginApi", cn, transaction);
                     com.CommandType = CommandType.StoredProcedure;
                     com.Parameters.AddWithValue("@Usr", modelU.Usr);
                     com.Parameters.AddWithValue("@Pwd", modelU.Pwd);
@@ -97,19 +97,80 @@ namespace webApiATSA.DataB
                     };
                     List<string> ccE = new List<string>() { "" };
                     List<string> ccoE = new List<string>() { "" };
-                    string asunto = "Se registró su firma digitalizada en el " + modelFd.nombreDocumento;
+                    string asunto = "Se registró su firma digitalizada en el docuemtno" + modelFd.nombreDocumento;
                     string cuerpo = "";
                     cuerpo += "Estimado usuario: </br></br>";
                     cuerpo += "Se informa que su firma ha sido registrada satisfactoriamente en el documento: "+ modelFd.nombreDocumento+"</br>";
-                    cuerpo += "Su firma valida que: Ha sido completado</br>";
                     cuerpo += "Fecha/Hora: " + fecha + "</br>";
-                    cuerpo += "Código de Firma: " + id_firma + "</br></br>";
+                    cuerpo += "Código de Firma: " + id_firma + "</br>";
                     cuerpo += "Serie: " + serie + "</br></br>";
                     cuerpo += "En caso Ud. no haya realizado esta acción y se haya asignado su firma incorrectamente a un documento por favor notificar a su gerencia y TI para que se realicen las correcciones e investigaciones correspondientes.</br></br>Saludos cordiales.";
                     Boolean emailSend =  MailSenderOffice365(toE, ccE, ccoE, asunto, cuerpo);
 
-                transaction.Commit();
-                    valorReturn = n;
+                    transaction.Commit();
+                    valorReturn = rutaImagen + n + "| " + id_firma + "| " + serie;
+                    return valorReturn;
+                }
+                catch (Exception ex)
+                {
+                    valorReturn = "Error| " + ex.Message;
+                    transaction.Rollback();
+                }
+                finally
+                {
+                    cn.Close();
+                }
+            }
+            return valorReturn;
+        }
+
+        public String setFirmaDigitalHistId(FirmaDigitalHistModel modelFd)
+        {
+            SqlTransaction transaction = null;
+            String valorReturn = "";
+            using (SqlConnection cn = new SqlConnection(conecction))
+            {
+                String fecha = "";
+                String nombreDocumento = "";
+                String sistema = "";
+                String ip = "";
+                String localizacion = "";
+                String nombres = "";
+                String apellidos = "";
+                String puestoTrabajo = "";
+                String gerencia = "";
+                String dni = "";
+
+                try
+                {
+                    cn.Open();
+                    transaction = cn.BeginTransaction();
+                    SqlCommand com = new SqlCommand("SP_firmaDigitalHist_getIdApi", cn, transaction);
+                    com.CommandType = CommandType.StoredProcedure;
+                    com.Parameters.AddWithValue("@Id_firma", modelFd.Id_firma);
+                    com.Parameters.AddWithValue("@codigoSerie", modelFd.codigoSerie);
+                    SqlDataAdapter da = new SqlDataAdapter(com);
+                    DataSet ds = new DataSet();
+                    da.Fill(ds);
+
+                    DataTable dt = ds.Tables[0];
+                    foreach (DataRow row in ds.Tables[0].Rows)
+                    {
+                        fecha = row["fecha"].ToString();
+                        nombreDocumento = row["nombreDocumento"].ToString();
+                        sistema = row["sistema"].ToString();
+                        ip = row["ip"].ToString();
+                        localizacion = row["localizacion"].ToString();
+                        nombres = row["nombres"].ToString();
+                        apellidos = row["apellidos"].ToString();
+                        puestoTrabajo = row["puestoTrabajo"].ToString();
+                        gerencia = row["gerencia"].ToString();
+                        dni = row["dni"].ToString();
+                    }
+
+                    transaction.Commit();
+                    valorReturn = fecha + "| " + nombreDocumento + "| " + sistema + "| " + ip + "| " + localizacion + "| " +
+                        nombres + "| " + apellidos + "| " + puestoTrabajo + "| " + gerencia + "| " + dni;
                     return valorReturn;
                 }
                 catch (Exception ex)
@@ -149,6 +210,7 @@ namespace webApiATSA.DataB
                     //cn.Close();
                 }
         }
+
         private static string Host = "smtp.office365.com";
         private static int Port = Convert.ToInt32("587");
         private static string mailInterno = "";

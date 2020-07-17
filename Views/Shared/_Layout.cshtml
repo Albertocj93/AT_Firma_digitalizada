@@ -9,14 +9,14 @@
 }
 @if (ViewBag.sessionN == null)
 {
- <script>window.location.href='@Url.Action("Index", "Account")'; </script>
+    <script>window.location.href='@Url.Action("Index", "Account")'; </script>
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - webApiExample</title>
+    <title>@ViewData["Title"] - ATSA</title>
     <link rel="icon" type="image/x-icon" href="http://www.atsaperu.com/images/favicon.ico" />
     @*<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />*@
     <link rel="stylesheet" href="~/css/site.css" />
@@ -98,8 +98,8 @@
                     </a>
                 </li>
                 @*<li class="nav-item theme-text">
-                    <a href="index.html" class="nav-link">Bussiness</a>
-                </li>*@
+                        <a href="index.html" class="nav-link">Bussiness</a>
+                    </li>*@
             </ul>
             <ul class="navbar-item flex-row ml-md-auto">
                 <li style="color:white; padding: 13px 20px 0 16px;">@ViewBag.sessionN</li>
@@ -131,8 +131,12 @@
                     <div class="page-header">
                         <nav class="breadcrumb-one" aria-label="breadcrumb">
                             <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="javascript:void(0);">@ViewData["CabNav"]</a></li>
-                                <li class="breadcrumb-item active" aria-current="page"><span>@ViewData["DetailNav"]</span></li>
+                                <li class="breadcrumb-item">
+                                    <a href="javascript:void(0);">@ViewData["CabNav"]</a>
+                                </li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    <span>@ViewData["DetailNav"]</span>
+                                </li>
                             </ol>
                         </nav>
                     </div>
@@ -151,7 +155,7 @@
             <nav id="sidebar">
                 <div class="shadow-bottom"></div>
                 <ul class="list-unstyled menu-categories" id="accordionExample">
-                    <li class="menu">
+                    @*<li class="menu">
                         <a href="#dashboard" data-active="@{ if (ViewData["Nav"].ToString() == "00"){ @ViewBag.showActive } }" data-toggle="collapse" aria-expanded="@{ if (ViewData["Nav"].ToString() == "00") { @ViewBag.showActive } else { @ViewBag.showDesactive} }" class="dropdown-toggle">
                             <div class="">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
@@ -165,9 +169,9 @@
                             <li class=" @{ if (ViewData["Nav"].ToString() == "00"){ @ViewBag.active } } ">
                                 <a asp-area="" asp-controller="Home" asp-action="Index">Inicio</a>
                             </li>
-                            @*<li><a href="#"> Analytics </a></li>*@
-                        </ul>
-                    </li>
+                            @*<li><a href="#"> Analytics </a></li>
+                                </ul>
+                        </li>*@
                     <li class="menu">
                         <a href="#users" data-active="@{ if (ViewData["Nav"].ToString() == "11"){ @ViewBag.showActive } }" data-toggle="collapse" aria-expanded="@{ if (ViewData["Nav"].ToString() == "11") { @ViewBag.showActive } else { @ViewBag.showDesactive} }" class="dropdown-toggle">
                             <div class="">
@@ -221,7 +225,9 @@
                     </p>
                 </div>
                 <div class="footer-section f-section-2">
-                    <p class=""><a asp-area="" asp-controller="Home" asp-action="Privacy" style="color: #F47c32;">Privacy</a></p>
+                    <p class="">
+                        <a asp-area="" asp-controller="Home" asp-action="Privacy" style="color: #F47c32;">Privacy</a>
+                    </p>
                 </div>
             </div>
         </div>

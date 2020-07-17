@@ -15,6 +15,7 @@ namespace webApiATSA.Models
         public int id { get; set; }
         //[Required]
         public String NombresCompletos { get; set; }
+        public String nombres { get; set; }
         public String apellidos { get; set; }
         public String Email { get; set; }
         public String CodigoSAP { get; set; }

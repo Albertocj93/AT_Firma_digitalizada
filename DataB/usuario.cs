@@ -90,7 +90,7 @@ namespace webApiATSA.DataB
                     transaction = cn.BeginTransaction();
                     SqlCommand com = new SqlCommand("SP_personal_INS", cn, transaction);
                     com.CommandType = CommandType.StoredProcedure;
-                    com.Parameters.AddWithValue("@NombresCompletos", modelo.NombresCompletos);
+                    com.Parameters.AddWithValue("@nombres", modelo.nombres);
                     com.Parameters.AddWithValue("@apellidos", modelo.apellidos);
                     com.Parameters.AddWithValue("@Email", modelo.Email);
                     com.Parameters.AddWithValue("@CodigoSAP", modelo.CodigoSAP);
@@ -236,7 +236,7 @@ namespace webApiATSA.DataB
                     SqlCommand com = new SqlCommand("SP_personal_UPD", cn, transaction);
                     com.CommandType = CommandType.StoredProcedure;
                     com.Parameters.AddWithValue("@id", modelo.id);
-                    com.Parameters.AddWithValue("@NombresCompletos", modelo.NombresCompletos);
+                    com.Parameters.AddWithValue("@nombres", modelo.nombres);
                     com.Parameters.AddWithValue("@apellidos", modelo.apellidos);
                     com.Parameters.AddWithValue("@Email", modelo.Email);
                     com.Parameters.AddWithValue("@CodigoSAP", modelo.CodigoSAP);

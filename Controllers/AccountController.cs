@@ -40,6 +40,7 @@ namespace webApiATSA.Controllers
 
                 String nombreCompleto = "";
                 String id_usuario = "";
+                String email = "";
                 Boolean b = fc["usuario"].ToString().Contains("@atsaperu.com");
 
                 PersonalModel us = new PersonalModel();
@@ -56,6 +57,7 @@ namespace webApiATSA.Controllers
                         {
                             nombreCompleto = dr["NombresCompletos"].ToString();
                             id_usuario = dr["id_usuario"].ToString();
+                            email = dr["Email"].ToString();
                         }
                     }
                     else
@@ -75,13 +77,15 @@ namespace webApiATSA.Controllers
 
                     foreach (System.Data.DataRow dr in ViewBag.session.Rows)
                     {
-                        nombreCompleto = dr["apellidos"].ToString() +", "+ dr["NombresCompletos"].ToString();
+                        nombreCompleto = dr["apellidos"].ToString() +", "+ dr["nombres"].ToString();
                         id_usuario = dr["id_usuario"].ToString();
+                        email = dr["Email"].ToString();
                     }
                 }
                 
                 HttpContext.Session.SetString("nombeCompleto", nombreCompleto);
                 HttpContext.Session.SetString("id_usuario", id_usuario);
+                HttpContext.Session.SetString("email", email);
 
                 return RedirectToAction("Index", "Home");
             }

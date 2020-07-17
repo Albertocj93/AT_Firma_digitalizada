@@ -76,20 +76,24 @@ namespace webApiATSA.Controllers
         [HttpPost]
         public ActionResult AddFirmaDigital(IFormCollection fc, FirmaDigitalModel fm)
         {
-            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");
+            ViewBag.sessionN = HttpContext.Session.GetString("nombeCompleto");            
+
             dblayer.config = configuration;
             try { 
 
                 fm.id_usuario = Convert.ToInt32(fc["cboUsuario"]);
+                String extension = Path.GetExtension(fm.firmaPath.FileName);
+                String email = ViewBag.sessionN = HttpContext.Session.GetString("email");
 
-                String dni = dblayer.setFirmaDigitalIns(fm);
+                String dni = dblayer.setFirmaDigitalIns(fm, extension, email);
                 string[] evalError = dni.Split("| ");
                 if (evalError[0] == "Error")
                     throw new Exception(evalError[1]);
 
                 String uniqueFileName = null;
-                String uploadsFolder = Path.Combine(hostEnvironment.WebRootPath, "Images/Firmas");
-                uniqueFileName = dni + ".jpeg";
+                String uploadsFolder = Path.Combine(hostEnvironment.WebRootPath, "Images/Firmas");               
+                //uniqueFileName = dni + ".jpeg";
+                uniqueFileName = dni + extension;
                 String filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 FileStream readFS = new FileStream(filePath, FileMode.Create);
                 fm.firmaPath.CopyTo(readFS);
@@ -143,13 +147,16 @@ namespace webApiATSA.Controllers
             dblayer.config = configuration;
             try
             {
-                fm.Id_firma = fc["Id_firma"];
-                dblayer.setFirmaDigitalUpd(fm);
+                fm.Id_firma = fc["idFirma"];
+                String extension = Path.GetExtension(fm.firmaPath.FileName);
+                String email = ViewBag.sessionN = HttpContext.Session.GetString("email");
+                dblayer.setFirmaDigitalUpd(fm, extension, email);
 
                 String uniqueFileName = null;
                 String dni = fc["dni"];
                 String uploadsFolder = Path.Combine(hostEnvironment.WebRootPath, "Images/Firmas");
-                uniqueFileName = dni + ".jpeg";
+                //uniqueFileName = dni + ".jpeg";
+                uniqueFileName = dni + extension;
                 String filePath = Path.Combine(uploadsFolder, uniqueFileName);
                 FileStream readFS = new FileStream(filePath, FileMode.Create);
                 fm.firmaPath.CopyTo(readFS);

@@ -38,7 +38,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-xl-4">
+                    <div class="col-md-12">
                         <input class="btn btn-primary mb-2" type="submit" id="btnfiltraUsuario" value="Buscar" />
                         <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="Usuario" asp-action="Index">Cargar todo</a>
                         <a class="btn btn-outline-primary mb-2" asp-area="" asp-controller="Usuario" asp-action="AddUsuario">Registrar</a>
@@ -49,15 +49,15 @@
                 <table id="tbUsuarios" class="table table-hover">
                     <thead>
                         <tr>
-                            <th class="text-center">Id</th>
+                            <th style="justify-content:center">Id</th>
                             <th class="thTable25">Nombres y apellidos</th>
                             <th>DNI</th>
                             <th>Usuario</th>
                             <th class="thTable25">Email</th>
-                            <th class="text-center">Estado</th>
+                            <th>Estado</th>
                             <th>Puesto</th>
                             <th>Licencia</th>
-                            <th>Acciones</th>
+                            <th class="text-center">&nbsp;</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -69,10 +69,10 @@
                                 <td>@dr["dni"]</td>
                                 <td>@dr["usuario"]</td>
                                 <td>@dr["Email"]</td>
-                                <td>@dr["activo"]</td>
+                                <td>@dr["estado"]</td>
                                 <td>@dr["puestoTrabajo"]</td>
                                 <td>@dr["licencia"]</td>
-                                <td class="text-center">
+                                <td>
                                     <a href="/Usuario/UpdUsuario?id=@dr["id"]"><i class="far fa-edit"></i></a>
                                     <a href="javascript:cambiarEstadoPersonal(@dr["id"], 0, '@dr["activo"]', false) "><i class="far fa-trash-alt"></i></a>
                                     @*<a href="#" onclick="deleteUser(`@dr["codigoUsuario"]`);">Delete</a>*@

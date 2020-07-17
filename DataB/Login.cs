@@ -201,7 +201,7 @@ namespace webApiATSA.DataB
                 return true;
 
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return false;
             }

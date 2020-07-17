@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.Extensions.Configuration;
 using webApiATSA.Models;
 
@@ -12,10 +11,10 @@ namespace webApiATSA.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class FirmaDigitalApiController : Controller
+    public class FirmaDigitalHistApiController : Controller
     {
         private readonly IConfiguration configuration;
-        public FirmaDigitalApiController(IConfiguration config)
+        public FirmaDigitalHistApiController(IConfiguration config)
         {
             this.configuration = config;
         }
@@ -25,11 +24,11 @@ namespace webApiATSA.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return new string[] { "value3", "value4" };
         }
 
         [HttpPost]
-        public ActionResult get(String usuario, String contrasena, String nombreDocumento, String sistema, String ip, String localizacion)
+        public ActionResult get(String usuario, String contrasena, String idFirma, String serie)
         {
             dblayer.config = configuration;
             try
@@ -44,23 +43,20 @@ namespace webApiATSA.Controllers
                     throw new Exception(evalError[1]);
 
                 FirmaDigitalHistModel fd = new FirmaDigitalHistModel();
-                fd.nombreDocumento = nombreDocumento;
-                fd.sistema = sistema;
-                fd.ip = ip;
-                fd.localizacion = localizacion;
-                String idFirma = dblayer.setFirmaDigitalHist(fd, personal);
+                fd.Id_firma = idFirma;
+                fd.codigoSerie = Convert.ToInt32(serie);
+                String idFirmaHis = dblayer.setFirmaDigitalHistId(fd);
 
-                string[] evalErrorF = idFirma.Split("| ");
+                string[] evalErrorF = idFirmaHis.Split("| ");
                 if (evalErrorF[0] == "Error")
                     throw new Exception("Favor de verificar el envío de todos los datos correctamente o si cuenta con firma digital");
 
-                return Json(new { Result = evalErrorF[0], IdFirma= evalErrorF[1], serie = evalErrorF[2] });
+                return Json(new { Fecha = evalErrorF[0], NroDocumento = evalErrorF[1], Sistema = evalErrorF[2], Ip = evalErrorF[3], Localizacion = evalErrorF[4], Nombres = evalErrorF[5],Apellidos = evalErrorF[6], PuestoTrabajo = evalErrorF[7], Gerencia = evalErrorF[8], Dni = evalErrorF[9] });
             }
             catch (Exception e)
             {
                 return NotFound(new string[] { e.Message });
             }
         }
-
     }
 }

@@ -93,7 +93,7 @@ namespace webApiATSA.Controllers
             try
             {
                 PersonalModel pe = new PersonalModel();
-                pe.NombresCompletos = fc["txtNombresApellidos"];
+                pe.nombres = fc["txtNombresApellidos"];
                 pe.apellidos = fc["txtApellidos"];
                 pe.Email = fc["txtEmail"];
                 pe.CodigoSAP = "";
@@ -223,7 +223,7 @@ namespace webApiATSA.Controllers
             {
                 PersonalModel pe = new PersonalModel();
                 pe.id = Convert.ToInt32(fc["id"]);
-                pe.NombresCompletos = fc["txtNombresApellidos"];
+                pe.nombres = fc["txtNombresApellidos"];
                 pe.apellidos = fc["txtApellidos"];
                 pe.Email = fc["txtEmail"];
                 pe.CodigoSAP = "";
